@@ -46,7 +46,7 @@ def command_syllables(tokens):
 def command_commands():
         print("\nMenu commands;\n\n" + get_supported_commands())
         print("\nCommand examples;\n\n" + get_command_examples())
-        print("\nNote: 1 to 4 syllables is recommended, anymore will take several minutes or more to process. The default at startup is 3.")
+        print("\nNote: 1 to 3 syllables is recommended, anymore will take several minutes or more to process. The default at startup is 3.")
 
 def convert_to_name(syllable_list, syllable_index_list):
         name_output = ""
