@@ -2,16 +2,21 @@ import random
 
 RANDOM_SYLLABLE_COUNT = -1
 
-def print_names(quantity, syllables_count, min_syllables_count, max_syllables_count):
+def print_names(quantity, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled):
         
         # The following consonants were removed; 'c' for 'k' or 's'; 'q' for 'k'
         # Other consonant sounds that are not suited for both beginning and ending are also removed
         
-        consonant_sounds = ["b", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t",
+        consonant_sounds = ["b", "d", "f", "g", "j", "k", "l", "m", "n", "p", "r", "s", "t",
                             "v", "w", "y", "z", "ch", "sk", "sh", "sm", "sp", "st", "th"]
-        beginning_only_consonant_sounds = []
-        end_only_consonant_sounds = []
+        beginning_only_consonant_sounds = ["h", "bl", "br", "dr", "dw", "fl", "fr", "gl", "gr", "kl", "kr", "kw", 
+                            "pl", "pr", "tr", "tw", "vl", "vr"]
+        end_only_consonant_sounds = ["x", "ft", "kt", "lt", "mp", "ng", "nk", "np",
+                            "nt", "rk", "rl", "rm", "rn", "rp", "rt", "rv"]
         vowel_sounds = ["ay", "ee", "eye", "oh", "oo", "aa", "eh", "ih", "ah", "uh", "aw"]
+
+        beginning_consonant_sounds = consonant_sounds + beginning_only_consonant_sounds
+        end_consonant_sounds = consonant_sounds + end_only_consonant_sounds
         
         print(" ")
         for current_name_count in range(0, quantity, 1):
@@ -26,32 +31,39 @@ def print_names(quantity, syllables_count, min_syllables_count, max_syllables_co
 
                         #Every syllable has 0 or 1 beginning consonants
                         consonant_beginning_count = random.randint(0, 1)
+
+                        if is_spacings_enabled:
+                                if syllable != 0:
+                                        name += " + "
                         
                         for j in range(0, consonant_beginning_count, 1):
-                                consonant_index = random.randint(0, len(consonant_sounds) - 1)
-                                name += consonant_sounds[consonant_index]
-                                if j == consonant_beginning_count - 1:
+                                index = random.randint(0, len(beginning_consonant_sounds) - 1)
+                                name += beginning_consonant_sounds[index]
+                                if is_spacings_enabled:
                                         name += "-"
 
                         #Every syllable has 1 vowel
-                        vowel_index = random.randint(0, len(vowel_sounds) - 1)
-                        name += vowel_sounds[vowel_index]
+                        index = random.randint(0, len(vowel_sounds) - 1)
+                        name += vowel_sounds[index]
 
-                        #Every syllable has 0 to 2 ending consonants
-                        consonant_end_count = random.randint(0, 2)
+                        #Every syllable has 0 to 1 ending consonants
+                        consonant_end_count = random.randint(0, 1)
+
                         for j in range(0, consonant_end_count, 1):
-                                if j == 0:
+                                if is_spacings_enabled:
                                         name += "-"
-                                consonant_index = random.randint(0, len(consonant_sounds) - 1)
-                                name += consonant_sounds[consonant_index]
+                                index = random.randint(0, len(end_consonant_sounds) - 1)
+                                name += end_consonant_sounds[index]
 
-                        if syllable != syllables_loop_count - 1:
-                                name += "-"
+
+                        #if not is_pronunciations_enabled:
+                        #        for j in range(0, len(name), 1):
+                                        #
                                 
                 print("\t" + name)
                 
                         
-def command_print(tokens, syllables_count, min_syllables_count, max_syllables_count):
+def command_print(tokens, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled):
         quantity = 0
         
         if len(tokens) == 2:
@@ -63,10 +75,28 @@ def command_print(tokens, syllables_count, min_syllables_count, max_syllables_co
                         print("The value '" + tokens[1] + "' is not a valid quantifier")
 
                 if quantity >= 1:
-                        print_names(quantity, syllables_count, min_syllables_count, max_syllables_count)
+                        print_names(quantity, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled)
         else:
                 print("This command has too many parameters")
 
+def validate_on_off_command(tokens):
+        if len(tokens) == 2:
+                if tokens[1] == "on":
+                        return True
+                elif tokens[1] == "off":
+                        return False
+                else:
+                        print("The value '" + tokens[1] + "' is not valid")
+        else:
+                print("This command has too many parameters")
+
+def command_spacings(tokens):        
+        return validate_on_off_command(tokens)
+
+def command_pronunciations(tokens):
+        return validate_on_off_command(tokens)
+
+        
 def command_min_max_syllables(tokens):
         min_max_syllables = [1, 2]
         
@@ -104,10 +134,11 @@ def command_syllables(tokens):
                 print("This command has too many parameters")
 
 def get_command_examples():
-        return "'syllables 4' \n'syllables random' \n'min_max_syllables 2 3' \n'print 5'"
+        return "'syllables 4' \n'syllables random' \n'min_max_syllables 2 3' \n'pronunciations on' \n'spacings off' \n'print 5'"
 
 def get_supported_commands():
-        return "'exit' \n'commands' \n'syllables <quantity>' \n'print <quantity>'"
+        return "'exit' \n'commands' \n'syllables <quantity/'random'>' \n'min_max_syllables <min> <max>'" \
+               "\n'pronunciations <'on'/'off'>' \n'spacings <'on'/'off'>' \n'print <quantity>'"
 
 def command_commands():
         print("\nMenu commands;\n\n" + get_supported_commands())
@@ -116,8 +147,10 @@ def command_commands():
 
 def main():
         syllables_count = RANDOM_SYLLABLE_COUNT
-        min_syllables_count = 1
-        max_syllables_count = 4
+        min_syllables_count = 2
+        max_syllables_count = 3
+        is_spacings_enabled = True
+        is_pronunciations_enabled = True
 
         print("\t\tAbstract Name Generator")
         command_commands()
@@ -136,8 +169,12 @@ def main():
                         min_max_syllables = command_min_max_syllables(tokens)
                         min_syllables = min_max_syllables[0]
                         max_syllables = min_max_syllables[1]
+                elif command == "spacings":
+                        is_spacings_enabled = command_spacings(tokens)
+                elif command == "pronunciations":
+                        is_pronunciations_enabled = command_pronunciations(tokens)
                 elif command == "print":
-                        command_print(tokens, syllables_count, min_syllables_count, max_syllables_count)
+                        command_print(tokens, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled)
                 elif command == "exit":
                         is_exiting = True
                 elif command == "commands":
