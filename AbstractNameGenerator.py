@@ -8,12 +8,12 @@ def print_names(quantity, syllables_count, min_syllables_count, max_syllables_co
         # Other consonant sounds that are not suited for both beginning and ending are also removed
         
         consonant_sounds = ["b", "d", "f", "g", "j", "k", "l", "m", "n", "p", "r", "s", "t",
-                            "v", "w", "y", "z", "ch", "sk", "sh", "sm", "sp", "st", "th"]
+                            "v", "w", "y", "z", "ch", "sk", "sh", "sp", "st", "th"]
         beginning_only_consonant_sounds = ["h", "bl", "br", "dr", "dw", "fl", "fr", "gl", "gr", "kl", "kr", "kw", 
-                            "pl", "pr", "tr", "tw", "vl", "vr"]
+                            "pl", "pr", "tr", "tw", "vr", "sm"]
         end_only_consonant_sounds = ["x", "ft", "kt", "lt", "mp", "ng", "nk", "np",
                             "nt", "rk", "rl", "rm", "rn", "rp", "rt", "rv"]
-        vowel_sounds = ["ay", "ee", "eye", "oh", "oo", "aa", "eh", "ih", "ah", "uh", "aw"]
+        vowel_sounds = ["ay", "ee", "eye", "oh", "oo", "aa", "eh", "ih", "ah", "uh"]
 
         beginning_consonant_sounds = consonant_sounds + beginning_only_consonant_sounds
         end_consonant_sounds = consonant_sounds + end_only_consonant_sounds
@@ -115,6 +115,8 @@ def command_min_max_syllables(tokens):
                 return min_max_syllables
         else:
                 print("This command has too many or too little parameters")
+
+        return min_max_syllables
 
 
 def command_syllables(tokens):
