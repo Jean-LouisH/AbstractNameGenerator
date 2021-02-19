@@ -2,7 +2,7 @@ import random
 
 RANDOM_SYLLABLE_COUNT = -1
 
-def print_names(quantity, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled):
+def print_names(quantity, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled):
         
         # The following consonants were removed; 'c' for 'k' or 's'; 'q' for 'k'
         # Other consonant sounds that are not suited for both beginning and ending are also removed
@@ -54,16 +54,11 @@ def print_names(quantity, syllables_count, min_syllables_count, max_syllables_co
                                         name += "-"
                                 index = random.randint(0, len(end_consonant_sounds) - 1)
                                 name += end_consonant_sounds[index]
-
-
-                        #if not is_pronunciations_enabled:
-                        #        for j in range(0, len(name), 1):
-                                        #
                                 
                 print("\t" + name)
                 
                         
-def command_print(tokens, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled):
+def command_print(tokens, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled):
         quantity = 0
         
         if len(tokens) == 2:
@@ -75,7 +70,7 @@ def command_print(tokens, syllables_count, min_syllables_count, max_syllables_co
                         print("The value '" + tokens[1] + "' is not a valid quantifier")
 
                 if quantity >= 1:
-                        print_names(quantity, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled)
+                        print_names(quantity, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled)
         else:
                 print("This command has too many parameters")
 
@@ -91,9 +86,6 @@ def validate_on_off_command(tokens):
                 print("This command has too many parameters")
 
 def command_spacings(tokens):        
-        return validate_on_off_command(tokens)
-
-def command_pronunciations(tokens):
         return validate_on_off_command(tokens)
 
         
@@ -136,11 +128,11 @@ def command_syllables(tokens):
                 print("This command has too many parameters")
 
 def get_command_examples():
-        return "'syllables 4' \n'syllables random' \n'min_max_syllables 2 3' \n'pronunciations on' \n'spacings off' \n'print 5'"
+        return "'syllables 4' \n'syllables random' \n'min_max_syllables 2 3' \n'spacings off' \n'print 5'"
 
 def get_supported_commands():
         return "'exit' \n'commands' \n'syllables <quantity/'random'>' \n'min_max_syllables <min> <max>'" \
-               "\n'pronunciations <'on'/'off'>' \n'spacings <'on'/'off'>' \n'print <quantity>'"
+               "\n'spacings <'on'/'off'>' \n'print <quantity>'"
 
 def command_commands():
         print("\nMenu commands;\n\n" + get_supported_commands())
@@ -152,7 +144,6 @@ def main():
         min_syllables_count = 2
         max_syllables_count = 3
         is_spacings_enabled = True
-        is_pronunciations_enabled = True
 
         print("\t\tAbstract Name Generator")
         command_commands()
@@ -173,10 +164,8 @@ def main():
                         max_syllables = min_max_syllables[1]
                 elif command == "spacings":
                         is_spacings_enabled = command_spacings(tokens)
-                elif command == "pronunciations":
-                        is_pronunciations_enabled = command_pronunciations(tokens)
                 elif command == "print":
-                        command_print(tokens, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled, is_pronunciations_enabled)
+                        command_print(tokens, syllables_count, min_syllables_count, max_syllables_count, is_spacings_enabled)
                 elif command == "exit":
                         is_exiting = True
                 elif command == "commands":
